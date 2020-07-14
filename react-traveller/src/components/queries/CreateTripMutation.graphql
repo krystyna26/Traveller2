@@ -1,0 +1,10 @@
+mutation CreateTrip($input: CreateTripInput!) {
+  createTrip(input: $input) @rest(method: "POST") {
+    author {
+      id
+    }
+    traveled_from
+    traveled_to
+    published
+  }
+}

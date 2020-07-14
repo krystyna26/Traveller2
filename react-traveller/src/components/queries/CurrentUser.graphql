@@ -1,0 +1,15 @@
+query CurrectUser {
+  user(where: { email: "krysia@gmail.com" }) {
+    id
+    first_name
+    last_name
+    email
+    createdAt
+    trips(where: { published: true }) {
+      traveled_to
+      traveled_from
+      travel_started_at
+      travel_ended_at
+    }
+  }
+}

@@ -1,0 +1,361 @@
+# import UserOrderByInput, TripOrderByInput, StopOrderByInput, CommentOrderByInput, PhotoOrderByInput,MessageOrderByInput ,ConversationOrderByInput from './generated/prisma.graphql'
+# https://github.com/Urigo/graphql-import
+
+type Query {
+  users(
+    query: String
+    first: Int
+    skip: Int
+    after: String
+    orderBy: UserOrderByInput
+  ): [User!]!
+  me: User!
+  trips(
+    query: String
+    first: Int
+    skip: Int
+    after: String
+    orderBy: TripOrderByInput
+  ): [Trip!]!
+  trip(id: ID!): Trip!
+  myTrips(query: String, orderBy: TripOrderByInput): [Trip!]!
+  stops(query: String, orderBy: StopOrderByInput): [Stop!]!
+  myStops(query: String, orderBy: StopOrderByInput): [Stop!]!
+  # posts(query: String): [Post!]!
+  comments(query: String, orderBy: CommentOrderByInput): [Comment!]!
+  myComments(query: String, orderBy: CommentOrderByInput): [Comment!]!
+  photos(query: String, orderBy: PhotoOrderByInput): [Photo!]!
+  # me: User!
+  # post: Post!
+  messages(query: String, orderBy: MessageOrderByInput): [Message!]!
+  conversations(
+    query: String
+    orderBy: ConversationOrderByInput
+  ): [Conversation!]!
+}
+
+type Mutation {
+  createUser(data: CreateUserInput!): AuthPayload!
+  login(data: LoginUserInput!): AuthPayload!
+  updateUser(data: UpdateUserInput!): User!
+  deleteUser: User!
+
+  addFriend(friendId: ID!): User!
+  # createPost(data: CreatePostInput!): Post!
+  # deletePost(id: ID!): Post!
+  # updatePost(id: ID!, data: UpdatePostInput!): Post!
+  createTrip(data: CreateTripInput!): Trip!
+  updateTrip(id: ID!, data: UpdateTripInput!): Trip!
+  deleteTrip(id: ID!): Trip!
+
+  createComment(data: CreateCommentInput!): Comment!
+  updateComment(id: ID!, data: UpdateCommentInput): Comment!
+  deleteComment(id: ID!): Comment!
+
+  createStop(data: CreateStopInput!): Stop!
+  updateStop(id: ID!, data: UpdateStopInput!): Stop!
+  deleteStop(id: ID!): Stop!
+
+  createPhoto(data: CreatePhotoInput!): Photo!
+  updatePhoto(id: ID!, data: UpdatePhotoInput!): Photo!
+  deletePhoto(id: ID!): Photo!
+
+  createConversation(data: CreateConversationInput!): Conversation!
+
+  createMessage(data: CreateMessageInput!): Message!
+}
+
+type Subscription {
+  count: Int!
+  comment(tripId: ID!): CommentSubscriptionPayload!
+  trip(userId: ID!): TripSubscriptionPayload!
+  myTrips: TripSubscriptionPayload!
+  photo(userId: ID, tripId: ID): PhotoSubscriptionPayload!
+  stop(tripId: ID!): StopSubscriptionPayload!
+
+  # post: PostSubscriptionPayload!
+}
+
+type AuthPayload {
+  token: String!
+  user: User!
+}
+
+input CreateUserInput {
+  # age: Int
+  first_name: String!
+  last_name: String!
+  age: Int
+  from: String
+  # avatar_url: Photo
+  # photosAdded: [Photo!]!
+  email: String!
+  password: String!
+}
+
+input LoginUserInput {
+  email: String!
+  password: String!
+}
+
+input CreateTripInput {
+  traveled_from: String!
+  traveled_to: String!
+  travel_started_at: DateTime!
+  travel_ended_at: DateTime!
+  budget: Float
+  published: Boolean
+  times_taken: Int
+}
+
+input UpdateUserInput {
+  first_name: String
+  last_name: String
+  age: Int
+  from: String
+  password: String
+  # avatar_url: Photo
+}
+
+input UpdateTripInput {
+  traveled_from: String
+  traveled_to: String
+  travel_started_at: DateTime
+  travel_ended_at: DateTime
+  published: Boolean
+  # stops: [Stop!]!
+  # num_of_people: Int
+  # kids: Boolean
+  # seniors: Boolean
+  # walking: Boolean
+  # driving: Boolean
+  # pace: PaceEnum!
+}
+
+input CreateStopInput {
+  trip: ID!
+  destination: String!
+  description: String
+  cost: Float
+  completed: Boolean
+  completedAt: DateTime
+}
+
+input UpdateStopInput {
+  destination: String
+  description: String
+  cost: Float
+  completed: Boolean
+  completedAt: DateTime
+}
+
+# input CreatePostInput {
+#   title: String!
+#   body: String!
+#   published: Boolean!
+#   author: ID!
+# }
+#
+# input UpdatePostInput {
+#   title: String
+#   body: String
+#   published: Boolean
+# }
+#
+input CreateCommentInput {
+  trip: ID!
+  content: String
+  published: Boolean
+}
+
+input UpdateCommentInput {
+  content: String
+}
+
+input CreatePhotoInput {
+  # photosAuthor: ID
+  user: ID
+  trip: ID
+  # stop: Stop
+  url: String!
+  caption: String
+}
+
+input UpdatePhotoInput {
+  trip: ID
+  url: String
+  caption: String
+}
+
+input CreateConversationInput {
+  recipient: ID!
+}
+
+input CreateMessageInput {
+  conversation_id: ID!
+  body: String!
+  is_read: Boolean
+}
+
+#
+# type User {
+#   id: ID!
+#   name: String!
+#   email: String!
+# age: Int
+# posts: [Post!]!
+# comments: [Comment!]!
+# }
+type User {
+  id: ID!
+  first_name: String!
+  last_name: String!
+  age: Int
+  from: String
+  avatar_url: Photo
+  email: String
+  password: String!
+  comments: [Comment!]!
+  trips: [Trip!]!
+  # friends: [User!]!
+  likedTrips: [Trip!]!
+  # photosAdded: [Photo!]!
+  conversations: [Conversation!]!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
+
+type Trip {
+  id: ID!
+  author: User!
+  traveled_from: String!
+  traveled_to: String!
+  travel_started_at: DateTime!
+  travel_ended_at: DateTime!
+  stops: [Stop!]!
+  comments: [Comment!]!
+  budget: Float
+  published: Boolean!
+  num_of_people: Int
+  kids: Boolean
+  seniors: Boolean
+  walking: Boolean
+  driving: Boolean
+  pace: PaceEnum!
+  rate: Int
+  pictures: [Photo!]!
+  times_taken: Int!
+  likedBy: [User!]!
+  # longitude: Float!
+  # latitude: Float!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
+
+type Stop {
+  id: ID!
+  trip: Trip!
+  destination: String!
+  description: String
+  cost: Float
+  completed: Boolean!
+  completedAt: DateTime
+  pictures: [Photo!]!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
+
+type Comment {
+  id: ID!
+  trip: Trip!
+  author: User!
+  content: String!
+  comments: [Comment!]!
+  published: Boolean!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
+
+type Photo {
+  id: ID!
+  trip: Trip
+  # photosAuthor: User
+  user: User
+  stop: Stop
+  url: String!
+  caption: String
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
+
+type Conversation {
+  id: ID!
+  sender: User!
+  recipient: [User!]!
+  createdAt: DateTime!
+}
+
+type Message {
+  id: ID!
+  conversation_id: Conversation!
+  body: String!
+  sender: User!
+  is_read: Boolean!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
+
+enum PaceEnum {
+  FAST
+  MODERATE
+  SLOW
+}
+
+scalar DateTime
+
+# type Post {
+#   id: ID!
+#   title: String!
+#   body: String!
+#   published: Boolean!
+#   author: User!
+#   comments: [Comment!]!
+# }
+#
+# type Comment {
+#   id: ID!
+#   text: String!
+#   author: User!
+#   post: Post!
+# }
+
+enum MutationType {
+  CREATED
+  UPDATED
+  DELETED
+}
+#
+# type PostSubscriptionPayload {
+#   mutation: MutationType!
+#   data: Post!
+# }
+#
+type CommentSubscriptionPayload {
+  mutation: MutationType!
+  node: Comment
+}
+
+type TripSubscriptionPayload {
+  mutation: MutationType!
+  node: Trip
+}
+
+type PhotoSubscriptionPayload {
+  mutation: MutationType!
+  node: Photo
+}
+
+type StopSubscriptionPayload {
+  mutation: MutationType!
+  node: Stop
+}

@@ -1,0 +1,13 @@
+#endpoint: ${env:PRISMA_ENDPOINT}
+endpoint: https://klp-prisma-server-d03dab4c93.herokuapp.com/prisma-traveller/dev
+#endpoint: https://klp-prisma-server-d03dab4c93.herokuapp.com/lp-traveller-service/prod
+datamodel: datamodel.prisma
+
+generate:
+  - generator: graphql-schema
+    output: ./generated/
+
+hooks:
+  post-deploy:
+    - echo "Deployment finished"
+    - graphql get-schema --project db

@@ -1,0 +1,34 @@
+# "ck9xiwho5003i0783xnrr10ci"
+query FetchTrips($id: ID) {
+  trips(orderBy: createdAt_ASC, where: { author: { id: $id } }) {
+    id
+    traveled_from
+    traveled_to
+    travel_started_at
+    travel_ended_at
+    published
+    pictures {
+      id
+    }
+    comments {
+      content
+      author {
+        first_name
+        id
+      }
+    }
+    stops {
+      id
+      description
+    }
+    author {
+      id
+      first_name
+    }
+    pictures {
+      id
+      caption
+    }
+    rate
+  }
+}
